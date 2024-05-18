@@ -1,2 +1,2 @@
 # myshop
-基于GoFrame的电商项
+基于GoFrame的电商项目
