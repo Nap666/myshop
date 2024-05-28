@@ -3,11 +3,13 @@ package rotation
 import (
 	"context"
 	"github.com/gogf/gf/v2/database/gdb"
-	"github.com/gogf/gf/v2/encoding/ghtml"
 	"github.com/gogf/gf/v2/frame/g"
-	"goframe-shop-v2/internal/dao"
-	"goframe-shop-v2/internal/model"
-	"goframe-shop-v2/internal/service"
+	"myshop/internal/model/entity"
+	"myshop/internal/service"
+
+	"github.com/gogf/gf/v2/encoding/ghtml"
+	"myshop/internal/dao"
+	"myshop/internal/model"
 )
 
 type sRotation struct{}
@@ -32,7 +34,18 @@ func (s *sRotation) Create(ctx context.Context, in model.RotationCreateInput) (o
 	return model.RotationCreateOutput{RotationId: int(lastInsertID)}, err
 }
 
-// Update 更新
+// Delete 删除
+func (s *sRotation) Delete(ctx context.Context, id uint) error {
+	return dao.RotationInfo.Transaction(ctx, func(ctx context.Context, tx gdb.TX) error {
+		// 删除内容
+		_, err := dao.RotationInfo.Ctx(ctx).Where(g.Map{
+			dao.RotationInfo.Columns().Id: id,
+		}).Unscoped().Delete()
+		return err
+	})
+}
+
+// Update 修改
 func (s *sRotation) Update(ctx context.Context, in model.RotationUpdateInput) error {
 	return dao.RotationInfo.Transaction(ctx, func(ctx context.Context, tx gdb.TX) error {
 		// 不允许HTML代码
@@ -49,13 +62,40 @@ func (s *sRotation) Update(ctx context.Context, in model.RotationUpdateInput) er
 	})
 }
 
-// Delete 删除
-func (s *sRotation) Delete(ctx context.Context, id uint) error {
-	return dao.RotationInfo.Transaction(ctx, func(ctx context.Context, tx gdb.TX) error {
-		// 删除内容
-		_, err := dao.RotationInfo.Ctx(ctx).Where(g.Map{
-			dao.RotationInfo.Columns().Id: id,
-		}).Unscoped().Delete()
-		return err
-	})
+// GetList 查询内容列表
+func (s *sRotation) GetList(ctx context.Context, in model.RotationGetListInput) (out *model.RotationGetListOutput, err error) {
+	var (
+		m = dao.RotationInfo.Ctx(ctx)
+	)
+	out = &model.RotationGetListOutput{
+		Page: in.Page,
+		Size: in.Size,
+	}
+
+	// 分配查询
+	listModel := m.Page(in.Page, in.Size)
+	// 排序方式
+	listModel = listModel.OrderDesc(dao.RotationInfo.Columns().Sort)
+
+	// 执行查询
+	var list []*entity.RotationInfo
+	if err := listModel.Scan(&list); err != nil {
+		return out, err
+	}
+	// 没有数据
+	if len(list) == 0 {
+		return out, nil
+	}
+	out.Total, err = m.Count()
+	if err != nil {
+		return out, err
+	}
+	// Rotation
+	//指定item的键名用：ScanList
+	//if err := listModel.ScanList(&out.List, "Rotation"); err != nil {
+	//不指定item的键名用：Scan
+	if err := listModel.Scan(&out.List); err != nil {
+		return out, err
+	}
+	return
 }

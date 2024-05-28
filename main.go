@@ -2,12 +2,14 @@ package main
 
 import (
 	_ "github.com/gogf/gf/contrib/drivers/mysql/v2"
+	_ "myshop/internal/logic"
+	_ "myshop/internal/packed"
+
 	"github.com/gogf/gf/v2/os/gctx"
-	"goframe-shop-v2/internal/cmd"
-	_ "goframe-shop-v2/internal/logic"
-	_ "goframe-shop-v2/internal/packed" //
+
+	"myshop/internal/cmd"
 )
 
 func main() {
-	cmd.Main.Run(gctx.New())
+	cmd.Main.Run(gctx.GetInitCtx())
 }

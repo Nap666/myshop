@@ -5,7 +5,7 @@
 package dao
 
 import (
-	"goframe-shop-v2/internal/dao/internal"
+	"myshop/internal/dao/internal"
 )
 
 // internalConsigneeInfoDao is internal type for wrapping internal DAO implements.
