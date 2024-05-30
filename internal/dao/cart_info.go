@@ -5,7 +5,7 @@
 package dao
 
 import (
-	"goframe-shop-v2/internal/dao/internal"
+	"myshop/internal/dao/internal"
 )
 
 // internalCartInfoDao is internal type for wrapping internal DAO implements.

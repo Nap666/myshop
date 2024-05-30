@@ -16,6 +16,7 @@ type AdminInfo struct {
 	RoleIds   string      `json:"roleIds"   orm:"role_ids"   description:"角色ids"`
 	CreatedAt *gtime.Time `json:"createdAt" orm:"created_at" description:""`
 	UpdatedAt *gtime.Time `json:"updatedAt" orm:"updated_at" description:""`
+	DeletedAt *gtime.Time `json:"deletedAt" orm:"deleted_at" description:""`
 	UserSalt  string      `json:"userSalt"  orm:"user_salt"  description:"加密盐"`
 	IsAdmin   int         `json:"isAdmin"   orm:"is_admin"   description:"是否超级管理员"`
 }
