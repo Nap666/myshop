@@ -5,4 +5,29 @@
 
 package service
 
-type ()
+import (
+	"context"
+	"myshop/internal/model"
+)
+
+type (
+	ILogin interface {
+		// 执行登录
+		Login(ctx context.Context, in model.UserLoginInput) error
+	}
+)
+
+var (
+	localLogin ILogin
+)
+
+func Login() ILogin {
+	if localLogin == nil {
+		panic("implement not found for interface ILogin, forgot register?")
+	}
+	return localLogin
+}
+
+func RegisterLogin(i ILogin) {
+	localLogin = i
+}

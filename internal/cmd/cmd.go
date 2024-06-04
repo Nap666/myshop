@@ -23,17 +23,9 @@ var (
 					service.Middleware().ResponseHandler,
 				)
 				group.Bind(
-
 					controller.Rotation, // 轮播图
 					controller.Login,    // 登录
 				)
-				// Special handler that needs authentication.
-				group.Group("/", func(group *ghttp.RouterGroup) {
-					group.Middleware(service.Middleware().Auth)
-					group.ALLMap(g.Map{
-						"/backend/admin/info": controller.Admin.Info,
-					})
-				})
 			})
 			s.Run()
 			return nil
